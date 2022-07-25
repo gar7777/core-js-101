@@ -268,10 +268,28 @@ function reverseInteger(num) {
 function isCreditCardNumber(ccn) {
   const arr = ccn.toString().split('');
   const checkDigit = Number(arr.splice(arr.length - 1).join(''));
-  const arrNumbers = arr.map((item, i) => {
-    if (i % 2 === 0) return +item;
-    return item * 2;
-  });
+  const arrNumbers = [];
+
+  if (arr.length % 2 === 1) {
+    for (let i = arr.length - 1; i >= 0; i -= 1) {
+      if (i % 2 === 0) {
+        const item = +arr[i] * 2;
+        arrNumbers.unshift(item);
+      } else {
+        arrNumbers.unshift(+arr[i]);
+      }
+    }
+  } else {
+    for (let i = 0; i < arr.length; i += 1) {
+      if (i % 2 === 0) {
+        arrNumbers.push(+arr[i]);
+      } else {
+        const item = +arr[i] * 2;
+        arrNumbers.push(item);
+      }
+    }
+  }
+
   for (let i = 0; i < arrNumbers.length; i += 1) {
     if (arrNumbers[i] > 9) {
       const stringTwoDigit = arrNumbers[i].toString();
@@ -325,8 +343,27 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  if (
+    !str.includes('[]')
+    && !str.includes('()')
+    && !str.includes('{}')
+    && !str.includes('<>')
+    && str.length
+  ) return false;
+  if (
+    !str.includes('[]')
+    && !str.includes('()')
+    && !str.includes('{}')
+    && !str.includes('<>')
+    && !str.length
+  ) return true;
+  let newStr = str;
+  if (str.includes('[]')) newStr = newStr.replace('[]', '');
+  if (str.includes('()')) newStr = newStr.replace('()', '');
+  if (str.includes('{}')) newStr = newStr.replace('{}', '');
+  if (str.includes('<>')) newStr = newStr.replace('<>', '');
+  return isBracketsBalanced(newStr);
 }
 
 /**
