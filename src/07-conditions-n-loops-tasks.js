@@ -125,8 +125,13 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  const topHight1 = rect1.top + rect1.height;
+  const leftWidth1 = rect1.left + rect1.width;
+  const top2 = rect2.top;
+  const left2 = rect2.left;
+  if (topHight1 > top2 && leftWidth1 > left2) return true;
+  return false;
 }
 
 /**
@@ -155,8 +160,12 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  const pointX = point.x - circle.center.x;
+  const pointY = point.y - circle.center.y;
+  const { radius } = circle;
+  const hypotenuza = Math.sqrt(pointX ** 2 + pointY ** 2);
+  return hypotenuza < radius;
 }
 
 /**
@@ -265,40 +274,41 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(ccn) {
-  const arr = ccn.toString().split('');
-  const checkDigit = Number(arr.splice(arr.length - 1).join(''));
-  const arrNumbers = [];
+function isCreditCardNumber(/* ccn */) {
+  throw new Error('Not implemented');
+  // const arr = ccn.toString().split('');
+  // const checkDigit = Number(arr.splice(arr.length - 1).join(''));
+  // const arrNumbers = [];
 
-  if (arr.length % 2 === 1) {
-    for (let i = arr.length - 1; i >= 0; i -= 1) {
-      if (i % 2 === 0) {
-        const item = +arr[i] * 2;
-        arrNumbers.unshift(item);
-      } else {
-        arrNumbers.unshift(+arr[i]);
-      }
-    }
-  } else {
-    for (let i = 0; i < arr.length; i += 1) {
-      if (i % 2 === 0) {
-        arrNumbers.push(+arr[i]);
-      } else {
-        const item = +arr[i] * 2;
-        arrNumbers.push(item);
-      }
-    }
-  }
+  // if (arr.length % 2 === 1) {
+  //   for (let i = arr.length - 1; i >= 0; i -= 1) {
+  //     if (i % 2 === 0) {
+  //       const item = +arr[i] * 2;
+  //       arrNumbers.unshift(item);
+  //     } else {
+  //       arrNumbers.unshift(+arr[i]);
+  //     }
+  //   }
+  // } else {
+  //   for (let i = 0; i < arr.length; i += 1) {
+  //     if (i % 2 === 0) {
+  //       arrNumbers.push(+arr[i]);
+  //     } else {
+  //       const item = +arr[i] * 2;
+  //       arrNumbers.push(item);
+  //     }
+  //   }
+  // }
 
-  for (let i = 0; i < arrNumbers.length; i += 1) {
-    if (arrNumbers[i] > 9) {
-      const stringTwoDigit = arrNumbers[i].toString();
-      arrNumbers.splice(i, 1, 1, Number(stringTwoDigit[1]));
-    }
-  }
-  const summDigit = arrNumbers.reduce((a, b) => a + b);
-  if (10 - (summDigit % 10) === checkDigit) return true;
-  return false;
+  // for (let i = 0; i < arrNumbers.length; i += 1) {
+  //   if (arrNumbers[i] > 9) {
+  //     const stringTwoDigit = arrNumbers[i].toString();
+  //     arrNumbers.splice(i, 1, 1, Number(stringTwoDigit[1]));
+  //   }
+  // }
+  // const summDigit = arrNumbers.reduce((a, b) => a + b);
+  // if (10 - (summDigit % 10) === checkDigit) return true;
+  // return false;
 }
 
 /**
@@ -402,8 +412,31 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const arr = [];
+  const res = {};
+  const result = [];
+  pathes.forEach((path) => {
+    const newPath = path.replaceAll('/', '/ ');
+    arr.push(newPath.split(' '));
+  });
+  arr.forEach((path) => {
+    path.forEach((item, i) => {
+      if (!res[`${i}${item}`]) {
+        res[`${i}${item}`] = 1;
+      } else {
+        res[`${i}${item}`] += 1;
+      }
+    });
+  });
+  // eslint-disable-next-line no-restricted-syntax
+  for (const prop in res) {
+    if (res[prop] === pathes.length) {
+      result.push(prop);
+    }
+  }
+  const truncatedResult = result.map((item) => item.slice(1));
+  return truncatedResult.join('');
 }
 
 /**
@@ -458,8 +491,40 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const O = [];
+  const X = [];
+
+  const WIN_POSITIONS = [
+    ['00', '01', '02'],
+    ['10', '11', '12'],
+    ['20', '21', '22'],
+    ['00', '10', '20'],
+    ['01', '11', '21'],
+    ['02', '12', '22'],
+    ['00', '11', '22'],
+    ['02', '11', '20'],
+  ];
+
+  position.forEach((item, i) => {
+    item.forEach((elem, j) => {
+      if (elem === '0') {
+        O.push([i, j].join(''));
+      } else if (elem === 'X') {
+        X.push([i, j].join(''));
+      }
+    });
+  });
+  let winner;
+  WIN_POSITIONS.forEach((pos) => {
+    if (O.includes(pos[0]) && O.includes(pos[1]) && O.includes(pos[2])) {
+      winner = '0';
+    }
+    if (X.includes(pos[0]) && X.includes(pos[1]) && X.includes(pos[2])) {
+      winner = 'X';
+    }
+  });
+  return winner;
 }
 
 module.exports = {

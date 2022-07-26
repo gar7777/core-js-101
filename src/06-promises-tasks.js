@@ -5,7 +5,6 @@
  *                                                                                                *
  ************************************************************************************************ */
 
-
 /**
  * Return Promise object that is resolved with string value === 'Hooray!!! She said "Yes"!',
  * if boolean value === true is passed, resolved with string value === 'Oh no, she said "No".',
@@ -28,10 +27,18 @@
  *      .catch((error) => console.log(error.message)) // 'Error: Wrong parameter is passed!
  *                                                    //  Ask her again.';
  */
-function willYouMarryMe(/* isPositiveAnswer */) {
-  throw new Error('Not implemented');
+function willYouMarryMe(isPositiveAnswer) {
+  const p = new Promise((res, rej) => {
+    if (isPositiveAnswer) {
+      res('Hooray!!! She said "Yes"!');
+    } else if (isPositiveAnswer === false) {
+      res('Oh no, she said "No".');
+    } else if (!isPositiveAnswer) {
+      rej(new Error('Wrong parameter is passed! Ask her again.'));
+    }
+  });
+  return p;
 }
-
 
 /**
  * Return Promise object that should be resolved with array containing plain values.
@@ -48,8 +55,9 @@ function willYouMarryMe(/* isPositiveAnswer */) {
  *    })
  *
  */
-function processAllPromises(/* array */) {
-  throw new Error('Not implemented');
+async function processAllPromises(array) {
+  const [a, b, c] = await Promise.all(array);
+  return [a, b, c];
 }
 
 /**
@@ -71,8 +79,9 @@ function processAllPromises(/* array */) {
  *    })
  *
  */
-function getFastestPromise(/* array */) {
-  throw new Error('Not implemented');
+function getFastestPromise(array) {
+  const promise = Promise.race(array);
+  return promise;
 }
 
 /**
@@ -94,6 +103,17 @@ function getFastestPromise(/* array */) {
  */
 function chainPromises(/* array, action */) {
   throw new Error('Not implemented');
+  // const promise = new Promise((res, rej) => {
+  //   let summ = 0;
+  //   const result = array.map(async (item) => {
+  //     const digit = await item;
+  //     summ = action(summ, digit);
+  //     return summ;
+  //   });
+  //   res(result[result.length - 1]);
+  //   rej(new Error('Smth went wrong'));
+  // });
+  // return promise;
 }
 
 module.exports = {
